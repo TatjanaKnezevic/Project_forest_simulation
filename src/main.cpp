@@ -35,16 +35,12 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-struct PointLight {
-    glm::vec3 position;
+struct DirLight {
+    glm::vec3 direction;
 
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;
-
-    float constant;
-    float linear;
-    float quadratic;
 };
 
 bool RenderImGuiEnabled = false;
@@ -118,18 +114,13 @@ int main()
     // -----------
     Model ourModel(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
     ourModel.SetShaderTextureNamePrefix("material.");
-    PointLight pointLight;
-    pointLight.ambient = glm::vec3(0.4, 0.4, 0.2);
-    pointLight.diffuse = glm::vec3(0.6, 0.5, 0.6);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
-    pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
-    pointLight.position = glm::vec3(4.0, 4.0, 4.0);
+    // directional light
+    DirLight dirLight;
+    dirLight.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
+    dirLight.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+    dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
+    dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
-
-    // draw in wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     // render loop
@@ -157,14 +148,11 @@ int main()
 
         float time = glfwGetTime();
 
-        pointLight.position = glm::vec3(4.0f * cos(time), 4.0f, 4*sin(time));
-        modelShader.setVec3("pointLight.position", pointLight.position);
-        modelShader.setVec3("pointLight.ambient", pointLight.ambient);
-        modelShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        modelShader.setVec3("pointLight.specular", pointLight.specular);
-        modelShader.setFloat("pointLight.constant", pointLight.constant);
-        modelShader.setFloat("pointLight.linear", pointLight.linear);
-        modelShader.setFloat("pointLight.quadratic", pointLight.quadratic);
+        modelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        modelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+
         modelShader.setVec3("viewPosition", camera.Position);
         modelShader.setFloat("material.shininess", 64.0f);
         // view/projection transformations
