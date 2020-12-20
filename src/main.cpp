@@ -34,6 +34,8 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+//flashlight on/off
+float flashlightOn = 0.0f;
 
 struct DirLight {
     glm::vec3 direction;
@@ -109,7 +111,6 @@ int main()
     // build and compile shaders
     // -------------------------
     Shader modelShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
-
     // load models
     // -----------
     Model ourModel(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
@@ -125,6 +126,7 @@ int main()
     glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     // render loop
     // -----------
+
     while (!glfwWindowShouldClose(window))
     {
         // per-frame time logic
@@ -153,6 +155,20 @@ int main()
         modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
         modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
+        int uniformId= glGetUniformLocation(modelShader.ID,"stopLightOn");
+        glUniform1f(uniformId, flashlightOn);
+
+        modelShader.setVec3("spotLight.position", camera.Position);
+        modelShader.setVec3("spotLight.direction", camera.Front);
+        modelShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        modelShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        modelShader.setFloat("spotLight.constant", 1.0f);
+        modelShader.setFloat("spotLight.linear", 0.09);
+        modelShader.setFloat("spotLight.quadratic", 0.032);
+        modelShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        modelShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+
         modelShader.setVec3("viewPosition", camera.Position);
         modelShader.setFloat("material.shininess", 64.0f);
         // view/projection transformations
@@ -167,7 +183,6 @@ int main()
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
-
 
         // Draw Imgui
         if (RenderImGuiEnabled) {
@@ -205,6 +220,14 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
+        if(flashlightOn == 0)
+            flashlightOn=1;
+        else{
+            flashlightOn=0;
+        }
+    }
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
