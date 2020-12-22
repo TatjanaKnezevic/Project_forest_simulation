@@ -6,8 +6,9 @@
     "\\include\\rg",
     "\\resources",
     "\\resources\\shaders",
+    "\\resources\\textures",
     "\\src"
   ],
-  "SelectedNode": "\\resources\\shaders\\2.model_lighting.fs",
+  "SelectedNode": "\\src\\main.cpp",
   "PreviewInSolutionExplorer": false
 }
