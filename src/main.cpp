@@ -398,8 +398,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastY = ypos;
 
     // Don't Update camera rotation ImGui is being rendered
-    if (!RenderImGuiEnabled)
+    if (!RenderImGuiEnabled) {
         camera.ProcessMouseMovement(xoffset, yoffset);
+        printf("%lf %lf\n", xoffset, yoffset);
+    }
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
