@@ -18,7 +18,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+//void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 
 // settings
@@ -75,7 +75,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
+    //glfwSetScrollCallback(window, scroll_callback);
     glfwSetKeyCallback(window, key_callback);
     // tell GLFW to capture our mouse
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -164,12 +164,12 @@ int main()
 
     vector<std::string> faces
             {
-                    FileSystem::getPath("resources/textures/forest/right.jpeg"),
-                    FileSystem::getPath("resources/textures/forest/left.jpeg"),
-                    FileSystem::getPath("resources/textures/forest/top.jpeg"),
-                    FileSystem::getPath("resources/textures/forest/bottom.jpeg"),
-                    FileSystem::getPath("resources/textures/forest/front.jpeg"),
-                    FileSystem::getPath("resources/textures/forest/back.jpeg")
+                    FileSystem::getPath("resources/textures/Plants/right.jpg"),
+                    FileSystem::getPath("resources/textures/Plants/left.jpg"),
+                    FileSystem::getPath("resources/textures/Plants/up.jpg"),
+                    FileSystem::getPath("resources/textures/Plants/bottom.jpg"),
+                    FileSystem::getPath("resources/textures/Plants/front.jpg"),
+                    FileSystem::getPath("resources/textures/Plants/back.jpg")
             };
 
     unsigned int forestTexture = loadCubemap(faces);
@@ -350,10 +350,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+/*void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(yoffset);
-}
+}*/
 
 void DrawImGui(glm::vec4& clearColor) {
     static bool show_demo_window = true;
