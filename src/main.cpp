@@ -179,11 +179,11 @@ int main()
 
     vector<glm::vec3> vegetation
             {
-                    glm::vec3(-1.5f, 0.0f, -0.48f),
-                    glm::vec3( 1.5f, 0.0f, 0.51f),
-                    glm::vec3( 0.0f, 0.0f, 0.7f),
-                    glm::vec3(-0.3f, 0.0f, -2.3f),
-                    glm::vec3 (0.5f, 0.0f, -0.6f)
+                    glm::vec3(-1.5f, -5.0f, -0.48f),
+                    glm::vec3( 1.5f, -5.0f, 0.51f),
+                    glm::vec3( 0.0f, -5.0f, 0.7f),
+                    glm::vec3(-0.3f, -5.0f, -2.3f),
+                    glm::vec3 (0.5f, -5.0f, -0.6f)
             };
 
     unsigned int plantTexture = loadTexture("resources/textures/grass.png");
@@ -296,14 +296,18 @@ int main()
         glBindVertexArray(transparentVAO);
         glBindTexture(GL_TEXTURE_2D, plantTexture);
 
+
         plantShader.use();
+
         plantShader.setMat4("projection", projection);
         plantShader.setMat4("view", view);
         for (unsigned int i = 0; i < vegetation.size(); i++)
         {
-            model = glm::mat4(1.0f);
-            model = glm::translate(model, vegetation[i]);
-            plantShader.setMat4("model", model);
+            glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+            transform = glm::translate(model, vegetation[i]);
+            transform = glm::rotate(transform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+            plantShader.setMat4("model", transform);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
