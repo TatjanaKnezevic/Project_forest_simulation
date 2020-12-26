@@ -36,7 +36,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 //flashlight on/off
-float flashlightOn = 0.0f;
+bool flashlightOn = false;
 
 struct DirLight {
     glm::vec3 direction;
@@ -265,9 +265,8 @@ int main()
         modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
         modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
-        int uniformId= glGetUniformLocation(modelShader.ID,"stopLightOn");
-        glUniform1f(uniformId, flashlightOn);
 
+        modelShader.setBool("spotLightOn", flashlightOn);
         modelShader.setVec3("spotLight.position", camera.Position);
         modelShader.setVec3("spotLight.direction", camera.Front);
         modelShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
@@ -361,13 +360,6 @@ void processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
-    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
-        if(flashlightOn == 0)
-            flashlightOn=1;
-        else{
-            flashlightOn=0;
-        }
-    }
 
 }
 
@@ -400,7 +392,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     // Don't Update camera rotation ImGui is being rendered
     if (!RenderImGuiEnabled) {
         camera.ProcessMouseMovement(xoffset, yoffset);
-        printf("%lf %lf\n", xoffset, yoffset);
     }
 }
 
@@ -473,6 +464,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         } else {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
+    }
+    if(key == GLFW_KEY_F && action == GLFW_PRESS){
+        flashlightOn = !flashlightOn;
     }
 }
 

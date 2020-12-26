@@ -48,7 +48,7 @@ in vec3 FragPos;
 uniform Material material;
 uniform DirLight dirLight;
 uniform SpotLight spotLight;
-uniform float stopLightOn;
+uniform int spotLightOn;
 
 uniform vec3 viewPosition;
 
@@ -97,7 +97,7 @@ void main()
     vec3 normal = normalize(Normal);
     vec3 viewDir = normalize(viewPosition - FragPos);
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
-    if(stopLightOn > 0)
+    if(spotLightOn > 0)
         result += CalcSpotLight(spotLight, normal, FragPos, viewDir);
     FragColor = vec4(result, 1.0);
 }
