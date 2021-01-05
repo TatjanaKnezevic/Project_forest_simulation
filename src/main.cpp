@@ -58,7 +58,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     unsigned int loadTexture(const char *path);
-    unsigned int loadCubemap(vector<std::string> faces);
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -89,9 +88,6 @@ int main()
         return -1;
     }
 
-    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
-
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -107,51 +103,16 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    Shader forestShader("resources/shaders/forest.vs","resources/shaders/forest.fs");
-    // Background forest
-    float forestVertices[] = {
-            // positions
-            -1.0f,  1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
+    //floor
+    float planeVertices[] = {
+            // positions          // texture Coords
+            5.0f, -1.0f,  5.0f,  1.0f, 0.0f,
+            -5.0f, -1.0f,  5.0f,  0.0f, 0.0f,
+            -5.0f, -1.0f, -5.0f,  0.0f, 1.0f,
 
-            -1.0f, -1.0f,  1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f, -1.0f,
-            -1.0f,  1.0f,  1.0f,
-            -1.0f, -1.0f,  1.0f,
-
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-
-            -1.0f, -1.0f,  1.0f,
-            -1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f, -1.0f,  1.0f,
-            -1.0f, -1.0f,  1.0f,
-
-            -1.0f,  1.0f, -1.0f,
-            1.0f,  1.0f, -1.0f,
-            1.0f,  1.0f,  1.0f,
-            1.0f,  1.0f,  1.0f,
-            -1.0f,  1.0f,  1.0f,
-            -1.0f,  1.0f, -1.0f,
-
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f,  1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f,  1.0f,
-            1.0f, -1.0f,  1.0f
+            5.0f, -1.0f,  5.0f,  1.0f, 0.0f,
+            -5.0f, -1.0f, -5.0f,  0.0f, 1.0f,
+            5.0f, -1.0f, -5.0f,  1.0f, 1.0f
     };
 
     float transparentVertices[] = {
@@ -164,6 +125,19 @@ int main()
             1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
             1.0f,  0.5f,  0.0f,  1.0f,  0.0f
     };
+
+    // plane VAO
+    unsigned int planeVAO, planeVBO;
+    glGenVertexArrays(1, &planeVAO);
+    glGenBuffers(1, &planeVBO);
+    glBindVertexArray(planeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
     // transparent VAO
     unsigned int transparentVAO, transparentVBO;
     glGenVertexArrays(1, &transparentVAO);
@@ -177,6 +151,8 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glBindVertexArray(0);
 
+
+
     vector<glm::vec3> vegetation
             {
                     glm::vec3(-1.5f, -3.0f, -0.48f),
@@ -187,27 +163,8 @@ int main()
             };
 
     unsigned int plantTexture = loadTexture("resources/textures/grass.png");
+    unsigned int floorTexture = loadTexture("resources/textures/Plants/bottom.jpg");
 
-    unsigned int skyboxVAO, skyboxVBO;
-    glGenVertexArrays(1, &skyboxVAO);
-    glGenBuffers(1, &skyboxVBO);
-    glBindVertexArray(skyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(forestVertices), &forestVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-    vector<std::string> faces
-            {
-                    FileSystem::getPath("resources/textures/Plants/right.jpg"),
-                    FileSystem::getPath("resources/textures/Plants/left.jpg"),
-                    FileSystem::getPath("resources/textures/Plants/up.jpg"),
-                    FileSystem::getPath("resources/textures/Plants/bottom.jpg"),
-                    FileSystem::getPath("resources/textures/Plants/front.jpg"),
-                    FileSystem::getPath("resources/textures/Plants/back.jpg")
-            };
-
-    unsigned int forestTexture = loadCubemap(faces);
     Shader plantShader("resources/shaders/blending.vs","resources/shaders/blending.fs");
 
 
@@ -292,37 +249,29 @@ int main()
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
 
+        plantShader.use();
+        //floor
+        glBindVertexArray(planeVAO);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-0.3f, 0.0f, -2.3f));
+        model = glm::scale(model, glm::vec3(10.0f));
+        plantShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
         glBindVertexArray(transparentVAO);
         glBindTexture(GL_TEXTURE_2D, plantTexture);
-
-
-        plantShader.use();
-
         plantShader.setMat4("projection", projection);
         plantShader.setMat4("view", view);
         for (unsigned int i = 0; i < vegetation.size(); i++)
         {
             glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-            transform = glm::translate(model, vegetation[i]);
+            transform = glm::translate(transform, vegetation[i]);
             transform = glm::rotate(transform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
             plantShader.setMat4("model", transform);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
-
-        glDepthMask(GL_FALSE);
-        glDepthFunc(GL_LEQUAL);
-        forestShader.use();
-        forestShader.setMat4("view", glm::mat4(glm::mat3(view)));
-        forestShader.setMat4("projection", projection);
-
-        glBindVertexArray(skyboxVAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, forestTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        glDepthMask(GL_TRUE);
-        glDepthFunc(GL_LESS);
 
         // Draw Imgui
         if (RenderImGuiEnabled) {
@@ -341,6 +290,8 @@ int main()
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
+    glDeleteVertexArrays(1, &planeVAO);
+    glDeleteBuffers(1, &planeVBO);
     glfwTerminate();
     return 0;
 }
@@ -470,35 +421,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
-unsigned int loadCubemap(vector<std::string> faces)
-{
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-    int width, height, nrChannels;
-    for (unsigned int i = 0; i < faces.size(); i++)
-    {
-        unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            stbi_image_free(data);
-        }
-        else
-        {
-            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-            stbi_image_free(data);
-        }
-    }
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    return textureID;
-}
 unsigned int loadTexture(char const * path)
 {
     unsigned int textureID;
