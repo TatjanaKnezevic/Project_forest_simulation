@@ -89,8 +89,7 @@ int main()
         return -1;
     }
 
-    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -220,12 +219,12 @@ int main()
     Shader modelShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
     // load models
     // -----------
-    Model ourModel(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
+    Model ourModel(FileSystem::getPath("resources/objects/Tree3/Tree.obj"));
     ourModel.SetShaderTextureNamePrefix("material.");
     // directional light
     DirLight dirLight;
     dirLight.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
-    dirLight.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+    dirLight.diffuse = glm::vec3(0.5f);
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
     dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
