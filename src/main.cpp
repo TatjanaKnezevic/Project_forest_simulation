@@ -23,8 +23,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -65,7 +65,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", glfwGetPrimaryMonitor(), NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -177,12 +177,12 @@ int main()
     Shader modelShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
     // load models
     // -----------
-    Model ourModel(FileSystem::getPath("resources/objects/backpack/backpack.obj"));
+    Model ourModel(FileSystem::getPath("resources/objects/Tree3/Tree.obj"));
     ourModel.SetShaderTextureNamePrefix("material.");
     // directional light
     DirLight dirLight;
-    dirLight.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
-    dirLight.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+    dirLight.ambient = glm::vec3(0.2);
+    dirLight.diffuse = glm::vec3(0.5f);
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
     dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
@@ -217,10 +217,10 @@ int main()
 
         float time = glfwGetTime();
 
-        modelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-        modelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-        modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-        modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        modelShader.setVec3("dirLight.direction", dirLight.direction);
+        modelShader.setVec3("dirLight.ambient", dirLight.ambient);
+        modelShader.setVec3("dirLight.diffuse", dirLight.diffuse);
+        modelShader.setVec3("dirLight.specular", dirLight.specular);
 
 
         modelShader.setBool("spotLightOn", flashlightOn);
