@@ -46,6 +46,21 @@ struct DirLight {
     glm::vec3 specular;
 };
 
+struct SpotLight {
+    glm::vec3 position;
+    glm::vec3 direction;
+    float cutOff;
+    float outerCutOff;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+};
+
 bool RenderImGuiEnabled = false;
 void DrawImGui(glm::vec4& clearColor);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -106,13 +121,13 @@ int main()
     //floor
     float planeVertices[] = {
             // positions          // texture Coords
-            5.0f, -0.5f,  5.0f,  5.0f, 0.0f,
-            -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
-            -5.0f, -0.5f, -5.0f,  0.0f, 5.0f,
+            5.0f, -0.2f,  5.0f,  5.0f, 0.0f,
+            -5.0f, -0.2f,  5.0f,  0.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,  0.0f, 5.0f,
 
-            5.0f, -0.5f,  5.0f,  5.0f, 0.0f,
-            -5.0f, -0.5f, -5.0f,  0.0f, 5.0f,
-            5.0f, -0.5f, -5.0f,  5.0f, 5.0f
+            5.0f, -0.2f,  5.0f,  5.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,  0.0f, 5.0f,
+            5.0f, -0.2f, -5.0f,  5.0f, 5.0f
     };
 
     float transparentVertices[] = {
@@ -186,6 +201,15 @@ int main()
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
     dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
+    SpotLight spotLight;
+    spotLight.ambient = glm::vec3(0.0f);
+    spotLight.diffuse = glm::vec3(1.0f);
+    spotLight.specular = glm::vec3(1.0f);
+    spotLight.constant = 1.0f;
+    spotLight.linear = 0.09f;
+    spotLight.quadratic = 0.032f;
+    spotLight.cutOff = glm::cos(glm::radians(12.5f));
+    spotLight.outerCutOff = glm::cos(glm::radians(15.0f));
 
     glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     // render loop
@@ -222,18 +246,19 @@ int main()
         modelShader.setVec3("dirLight.diffuse", dirLight.diffuse);
         modelShader.setVec3("dirLight.specular", dirLight.specular);
 
-
+        spotLight.direction = camera.Front;
+        spotLight.position = camera.Position;
         modelShader.setBool("spotLightOn", flashlightOn);
-        modelShader.setVec3("spotLight.position", camera.Position);
-        modelShader.setVec3("spotLight.direction", camera.Front);
-        modelShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-        modelShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-        modelShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
-        modelShader.setFloat("spotLight.constant", 1.0f);
-        modelShader.setFloat("spotLight.linear", 0.09);
-        modelShader.setFloat("spotLight.quadratic", 0.032);
-        modelShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-        modelShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+        modelShader.setVec3("spotLight.position", spotLight.position);
+        modelShader.setVec3("spotLight.direction", spotLight.direction);
+        modelShader.setVec3("spotLight.ambient", spotLight.ambient);
+        modelShader.setVec3("spotLight.diffuse", spotLight.diffuse);
+        modelShader.setVec3("spotLight.specular", spotLight.specular);
+        modelShader.setFloat("spotLight.constant", spotLight.constant);
+        modelShader.setFloat("spotLight.linear", spotLight.linear);
+        modelShader.setFloat("spotLight.quadratic", spotLight.quadratic);
+        modelShader.setFloat("spotLight.cutOff", spotLight.cutOff);
+        modelShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
         modelShader.setVec3("viewPosition", camera.Position);
         modelShader.setFloat("material.shininess", 64.0f);
@@ -242,10 +267,10 @@ int main()
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
 
-        // render the loaded model
+        // rendering the tree
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.0f, -4.2f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(4.0f));	// it's a bit too big for our scene, so scale it down
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
 
