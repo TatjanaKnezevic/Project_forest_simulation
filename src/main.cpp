@@ -106,13 +106,13 @@ int main()
     //floor
     float planeVertices[] = {
             // positions          // texture Coords
-            5.0f, -1.0f,  5.0f,  1.0f, 0.0f,
-            -5.0f, -1.0f,  5.0f,  0.0f, 0.0f,
-            -5.0f, -1.0f, -5.0f,  0.0f, 1.0f,
+            5.0f, -0.5f,  5.0f,  5.0f, 0.0f,
+            -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
+            -5.0f, -0.5f, -5.0f,  0.0f, 5.0f,
 
-            5.0f, -1.0f,  5.0f,  1.0f, 0.0f,
-            -5.0f, -1.0f, -5.0f,  0.0f, 1.0f,
-            5.0f, -1.0f, -5.0f,  1.0f, 1.0f
+            5.0f, -0.5f,  5.0f,  5.0f, 0.0f,
+            -5.0f, -0.5f, -5.0f,  0.0f, 5.0f,
+            5.0f, -0.5f, -5.0f,  5.0f, 5.0f
     };
 
     float transparentVertices[] = {
@@ -254,8 +254,7 @@ int main()
         glBindVertexArray(planeVAO);
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-0.3f, 0.0f, -2.3f));
-        model = glm::scale(model, glm::vec3(10.0f));
+        model = glm::scale(model, glm::vec3(20.0f));
         plantShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -442,8 +441,8 @@ unsigned int loadTexture(char const * path)
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*format == GL_RGBA ? GL_CLAMP_TO_EDGE :*/GL_MIRRORED_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*format == GL_RGBA ? GL_CLAMP_TO_EDGE :*/ GL_MIRRORED_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
