@@ -120,25 +120,25 @@ int main()
 
     //floor
     float planeVertices[] = {
-            // positions          // texture Coords
-            5.0f, -0.2f,  5.0f,  5.0f, 0.0f,
-            -5.0f, -0.2f,  5.0f,  0.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,  0.0f, 5.0f,
+            // positions                normals       texture coords
+             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 0.0f,
+            -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 20.0f,
 
-            5.0f, -0.2f,  5.0f,  5.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,  0.0f, 5.0f,
-            5.0f, -0.2f, -5.0f,  5.0f, 5.0f
+             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 20.0f,
+             5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 20.0f
     };
 
     float transparentVertices[] = {
-            // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
-            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-            0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
-            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+            // positions               normals        texture Coords (swapped y coordinates because texture is flipped upside down)
+            0.0f,  0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   0.0f,  0.0f,
+            0.0f, -0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   0.0f,  1.0f,
+            1.0f, -0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   1.0f,  1.0f,
 
-            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
-            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
-            1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+            0.0f,  0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   0.0f,  0.0f,
+            1.0f, -0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   1.0f,  1.0f,
+            1.0f,  0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   1.0f,  0.0f
     };
 
     // plane VAO
@@ -149,9 +149,11 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     // transparent VAO
     unsigned int transparentVAO, transparentVBO;
@@ -161,9 +163,11 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
 
 
@@ -178,9 +182,7 @@ int main()
             };
 
     unsigned int plantTexture = loadTexture("resources/textures/grass.png");
-    unsigned int floorTexture = loadTexture("resources/textures/Plants/bottom.jpg");
-
-    Shader plantShader("resources/shaders/blending.vs","resources/shaders/blending.fs");
+    unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
 
 
     // configure global opengl state
@@ -192,11 +194,11 @@ int main()
     Shader modelShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
     // load models
     // -----------
-    Model ourModel(FileSystem::getPath("resources/objects/Tree3/Tree.obj"));
+    Model ourModel(FileSystem::getPath("resources/objects/Tree/Tree.obj"));
     ourModel.SetShaderTextureNamePrefix("material.");
     // directional light
     DirLight dirLight;
-    dirLight.ambient = glm::vec3(0.2);
+    dirLight.ambient = glm::vec3(0.1f);
     dirLight.diffuse = glm::vec3(0.5f);
     dirLight.direction = glm::vec3(-0.2f, -1.0f, -0.3f);
     dirLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -239,8 +241,18 @@ int main()
         // don't forget to enable shader before setting uniforms
         modelShader.use();
 
+        // calculating day-night cycle
         float time = glfwGetTime();
-
+        float sin_time = sin(time/10);
+        float cos_time = cos(time/10);
+        if(sin_time > 0.0f) {
+            dirLight.diffuse = glm::vec3(0.5f * sin_time);
+            dirLight.specular = glm::vec3( 0.5f * sin_time);
+            dirLight.direction = glm::vec3(-cos_time, -sin_time, 0);
+        }
+        else {
+            dirLight.direction = glm::vec3(0, 0, 0);
+        }
         modelShader.setVec3("dirLight.direction", dirLight.direction);
         modelShader.setVec3("dirLight.ambient", dirLight.ambient);
         modelShader.setVec3("dirLight.diffuse", dirLight.diffuse);
@@ -261,39 +273,44 @@ int main()
         modelShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
         modelShader.setVec3("viewPosition", camera.Position);
-        modelShader.setFloat("material.shininess", 64.0f);
+        modelShader.setFloat("material.shininess", 8.0f);
         // view/projection transformations
 
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
 
-        // rendering the tree
+        // rendering the floor
+        glActiveTexture(GL_TEXTURE0);
+        glBindVertexArray(planeVAO);
+        glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(20.0f));
+        modelShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // rendering the tree
+
+        model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -4.2f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(4.0f));	// it's a bit too big for our scene, so scale it down
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
 
-        plantShader.use();
-        //floor
-        glBindVertexArray(planeVAO);
-        glBindTexture(GL_TEXTURE_2D, floorTexture);
-        model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(20.0f));
-        plantShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
+        // rendering grass textures
+        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(transparentVAO);
+        glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, plantTexture);
-        plantShader.setMat4("projection", projection);
-        plantShader.setMat4("view", view);
+        modelShader.setMat4("projection", projection);
+        modelShader.setMat4("view", view);
         for (unsigned int i = 0; i < vegetation.size(); i++)
         {
             glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
             transform = glm::translate(transform, vegetation[i]);
             transform = glm::rotate(transform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-            plantShader.setMat4("model", transform);
+            modelShader.setMat4("model", transform);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
@@ -466,8 +483,8 @@ unsigned int loadTexture(char const * path)
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*format == GL_RGBA ? GL_CLAMP_TO_EDGE :*/GL_MIRRORED_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*format == GL_RGBA ? GL_CLAMP_TO_EDGE :*/ GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*format == GL_RGBA ? GL_CLAMP_TO_EDGE :*/GL_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*format == GL_RGBA ? GL_CLAMP_TO_EDGE :*/ GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
