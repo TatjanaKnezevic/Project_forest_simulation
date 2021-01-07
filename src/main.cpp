@@ -169,19 +169,10 @@ int main()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
-
-
-
-    vector<glm::vec3> vegetation
-            {
-                    glm::vec3(-1.5f, -3.0f, -0.48f),
-                    glm::vec3( 1.5f, -3.0f, 0.51f),
-                    glm::vec3( 0.0f, -3.0f, 0.7f),
-                    glm::vec3(-0.3f, -3.0f, -2.3f),
-                    glm::vec3 (0.5f, -3.0f, -0.6f)
-            };
-
-    unsigned int plantTexture = loadTexture("resources/textures/grass.png");
+    
+    unsigned int noteTexture1 = loadTexture("resources/textures/its.jpg");
+    unsigned int noteTexture2 = loadTexture("resources/textures/not.jpg");
+    unsigned int noteTexture3 = loadTexture("resources/textures/real.jpg");
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
     unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
 
@@ -306,22 +297,30 @@ int main()
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
 
-        // rendering grass textures
+        // rendering note textures
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(transparentVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
-        glBindTexture(GL_TEXTURE_2D, plantTexture);
+        glBindTexture(GL_TEXTURE_2D, noteTexture1);
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
-        for (unsigned int i = 0; i < vegetation.size(); i++)
-        {
-            glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-            transform = glm::translate(transform, vegetation[i]);
-            transform = glm::rotate(transform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-            modelShader.setMat4("model", transform);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
+        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::translate(transform, glm::vec3(-1.5f, -3.0f, -0.48f));
+        modelShader.setMat4("model", transform);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindTexture(GL_TEXTURE_2D, noteTexture2);
+        transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::translate(transform, glm::vec3(-0.3f, -3.0f, -2.3f));
+        modelShader.setMat4("model", transform);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindTexture(GL_TEXTURE_2D, noteTexture3);
+        transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::translate(transform, glm::vec3 (0.5f, -3.0f, -0.6f));
+        modelShader.setMat4("model", transform);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // Draw Imgui
         if (RenderImGuiEnabled) {
