@@ -132,24 +132,24 @@ int main()
 
     float skyVertices[] = {
             // positions                normals       texture coords
-            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
+             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
             -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
             -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
 
-            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
+             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
             -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
-            5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 5.0f
+             5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 5.0f
     };
 
     float wallVertices[] = {
             // positions                normals       texture coords
-            6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+             6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
             -6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
             -6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
 
-            6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+             6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
             -6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-            6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
+             6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
     };
 
 
@@ -242,7 +242,7 @@ int main()
     // -----------
     Model ourModel(FileSystem::getPath("resources/objects/Tree/Tree.obj"));
     ourModel.SetShaderTextureNamePrefix("material.");
-    
+
     // directional light
     DirLight dirLight;
     dirLight.ambient = glm::vec3(0.1f);
