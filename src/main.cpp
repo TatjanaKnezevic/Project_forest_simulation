@@ -242,6 +242,7 @@ int main()
     // -----------
     Model ourModel(FileSystem::getPath("resources/objects/Tree/Tree.obj"));
     ourModel.SetShaderTextureNamePrefix("material.");
+    
     // directional light
     DirLight dirLight;
     dirLight.ambient = glm::vec3(0.1f);
@@ -280,7 +281,7 @@ int main()
         // ------
         glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 200.0f);
         glm::mat4 view = camera.GetViewMatrix();
 
 
@@ -336,7 +337,9 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //rendering the sky
+        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(skyVAO);
+        glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, skyTexture);
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 30.0f, 0.0f));
@@ -345,21 +348,16 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //rendering the walls
-        glBindTexture(GL_TEXTURE_2D, wallTexture);
+        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(wallVAO);
+        glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
+        glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 10.0f, -60.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(10.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // rendering the tree
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -4.2f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(4.0f));	// it's a bit too big for our scene, so scale it down
-        modelShader.setMat4("model", model);
-        ourModel.Draw(modelShader);
 
         // rendering note textures
         glActiveTexture(GL_TEXTURE0);
@@ -385,6 +383,15 @@ int main()
         transform = glm::translate(transform, glm::vec3 (0.5f, -3.0f, -0.6f));
         modelShader.setMat4("model", transform);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // rendering the tree
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -3.2f,0.0f));
+        model = glm::scale(model, glm::vec3(4.5f));
+
+        modelShader.setMat4("model", model);
+        ourModel.Draw(modelShader);
+
 
         // Draw Imgui
         if (RenderImGuiEnabled) {
@@ -415,7 +422,6 @@ void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -521,6 +527,12 @@ void DrawImGui(glm::vec4& clearColor) {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    // changing to running/walking
+    if(glfwGetKey(window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        camera.speedUp();
+    if(glfwGetKey(window,GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+        camera.slowDown();
+
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
         RenderImGuiEnabled = !RenderImGuiEnabled;
         if (RenderImGuiEnabled) {
@@ -529,6 +541,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     }
+    // flashlight control
     if(key == GLFW_KEY_F && action == GLFW_PRESS){
         flashlightOn = !flashlightOn;
     }

@@ -16,12 +16,15 @@ enum Camera_Movement {
 };
 
 // Default camera values
-const float YAW         = -90.0f;
-const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.001f;
-const float ZOOM        =  45.0f;
-
+const float YAW             = -90.0f;
+const float PITCH           =  0.0f;
+const float SPEED           =  5.0f;
+const float SENSITIVITY     =  0.001f;
+const float ZOOM            =  45.0f;
+// Default bobbing values
+const float BOBBING_SIZE = 0.125f;
+const float BOBBING_SPEED = 5.0f;
+const glm::vec3 BOBBING_VEC = glm::vec3(0);
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
@@ -40,6 +43,10 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
+    // Bobbing values
+    float bobbingSize           = BOBBING_SIZE;
+    float bobbingSpeed          = BOBBING_SPEED;
+    glm::vec3 previousBobbing   = BOBBING_VEC;
 
     // constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
@@ -70,15 +77,22 @@ public:
     void ProcessKeyboard(Camera_Movement direction, float deltaTime)
     {
         float velocity = MovementSpeed * deltaTime;
+
+        // calculating camera bobbing
+        float time = glfwGetTime();
+        glm::vec3 bobbing = glm::vec3 (cos(time*bobbingSpeed)*bobbingSize,glm::abs(sin(time*bobbingSpeed)*bobbingSize),0);
+        glm::vec3 deltaBobbing = previousBobbing - bobbing;
+        previousBobbing = bobbing;
+
         if (direction == FORWARD)
-            Position += Front * velocity;
+            Position += Front * velocity + deltaBobbing;
         if (direction == BACKWARD)
-            Position -= Front * velocity;
+            Position -= Front * velocity + deltaBobbing;
         if (direction == LEFT)
-            Position -= Right * velocity;
+            Position -= Right * velocity + deltaBobbing;
         if (direction == RIGHT)
-            Position += Right * velocity;
-        //Position.y = 0.0f;
+            Position += Right * velocity + deltaBobbing;
+        Position.y = 0.0f + previousBobbing.y;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -103,14 +117,16 @@ public:
         updateCameraVectors();
     }
 
-    // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll(float yoffset)
-    {
-        Zoom -= (float)yoffset;
-        if (Zoom < 1.0f)
-            Zoom = 1.0f;
-        if (Zoom > 45.0f)
-            Zoom = 45.0f; 
+    // changing to running/walking speed
+    void speedUp(){
+        MovementSpeed = SPEED * 2.5f;
+        bobbingSpeed = BOBBING_SPEED * 2.5f;
+        bobbingSize = BOBBING_SIZE * 1.5f;
+    }
+    void slowDown(){
+        MovementSpeed = SPEED;
+        bobbingSpeed = BOBBING_SPEED;
+        bobbingSize = BOBBING_SIZE;
     }
 
 private:
