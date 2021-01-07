@@ -130,16 +130,16 @@ int main()
              5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 20.0f
     };
 
-    /*float wallVertices[] = {
+    float wallVertices[] = {
             // positions                normals       texture coords
-            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 0.0f,
-            -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 20.0f,
+            6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            -6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
 
-            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 20.0f,
-            5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 20.0f
-    };*/
+            6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            -6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+            6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
+    };
 
 
     float transparentVertices[] = {
@@ -160,6 +160,20 @@ int main()
     glBindVertexArray(planeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
+    // wall VAO
+    unsigned int wallVAO, wallVBO;
+    glGenVertexArrays(1, &wallVAO);
+    glGenBuffers(1, &wallVBO);
+    glBindVertexArray(wallVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, wallVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(wallVertices), &wallVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
@@ -303,14 +317,15 @@ int main()
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        /*//rendering the walls
+        //rendering the walls
         glBindTexture(GL_TEXTURE_2D, wallTexture);
+        glBindVertexArray(wallVAO);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(10.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(20.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 10.0f, -80.0f));
+        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(10.0f));
         modelShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 6);*/
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // rendering the tree
         model = glm::mat4(1.0f);
