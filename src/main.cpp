@@ -290,10 +290,10 @@ int main()
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        //rendering the floor
+        //rendering the sky
         glBindTexture(GL_TEXTURE_2D, skyTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 10.2f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 30.0f, 0.0f));
         model = glm::scale(model, glm::vec3(20.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
