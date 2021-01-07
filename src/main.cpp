@@ -130,6 +130,18 @@ int main()
              5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 20.0f
     };
 
+    /*float wallVertices[] = {
+            // positions                normals       texture coords
+            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 0.0f,
+            -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 20.0f,
+
+            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 20.0f,
+            5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 20.0f
+    };*/
+
+
     float transparentVertices[] = {
             // positions               normals        texture Coords (swapped y coordinates because texture is flipped upside down)
             0.0f,  0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   0.0f,  0.0f,
@@ -173,8 +185,10 @@ int main()
     unsigned int noteTexture1 = loadTexture("resources/textures/its.jpg");
     unsigned int noteTexture2 = loadTexture("resources/textures/not.jpg");
     unsigned int noteTexture3 = loadTexture("resources/textures/real.jpg");
+
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
     unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
+    unsigned int wallTexture = loadTexture("resources/textures/Plants/left.jpg");
 
 
     // configure global opengl state
@@ -289,8 +303,16 @@ int main()
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        // rendering the tree
+        /*//rendering the walls
+        glBindTexture(GL_TEXTURE_2D, wallTexture);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 10.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(10.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(20.0f));
+        modelShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
+        // rendering the tree
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -4.2f, 0.0f)); // translate it down so it's at the center of the scene
         model = glm::scale(model, glm::vec3(4.0f));	// it's a bit too big for our scene, so scale it down
