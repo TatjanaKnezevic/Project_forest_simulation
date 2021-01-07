@@ -130,6 +130,17 @@ int main()
              5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   20.0f, 20.0f
     };
 
+    float skyVertices[] = {
+            // positions                normals       texture coords
+            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
+            -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
+
+            5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
+            5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 5.0f
+    };
+
     float wallVertices[] = {
             // positions                normals       texture coords
             6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
@@ -166,6 +177,21 @@ int main()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
+    // sky VAO
+    unsigned int skyVAO, skyVBO;
+    glGenVertexArrays(1, &skyVAO);
+    glGenBuffers(1, &skyVBO);
+    glBindVertexArray(skyVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyVertices), &skyVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
 
     // wall VAO
     unsigned int wallVAO, wallVBO;
@@ -305,15 +331,16 @@ int main()
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(20.0f));
+        model = glm::scale(model, glm::vec3(15.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //rendering the sky
+        glBindVertexArray(skyVAO);
         glBindTexture(GL_TEXTURE_2D, skyTexture);
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 30.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(20.0f));
+        model = glm::scale(model, glm::vec3(15.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -321,7 +348,7 @@ int main()
         glBindTexture(GL_TEXTURE_2D, wallTexture);
         glBindVertexArray(wallVAO);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 10.0f, -80.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 10.0f, -60.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(10.0f));
         modelShader.setMat4("model", model);
