@@ -182,9 +182,9 @@ int main()
     glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glBindVertexArray(0);
     
-    unsigned int noteTexture1 = loadTexture("resources/textures/its.jpg");
-    unsigned int noteTexture2 = loadTexture("resources/textures/not.jpg");
-    unsigned int noteTexture3 = loadTexture("resources/textures/real.jpg");
+    unsigned int noteTexture1 = loadTexture("resources/textures/its.png");
+    unsigned int noteTexture2 = loadTexture("resources/textures/not.png");
+    unsigned int noteTexture3 = loadTexture("resources/textures/real.png");
 
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
     unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
