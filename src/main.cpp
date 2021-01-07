@@ -183,6 +183,7 @@ int main()
 
     unsigned int plantTexture = loadTexture("resources/textures/grass.png");
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
+    unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
 
 
     // configure global opengl state
@@ -285,6 +286,14 @@ int main()
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(20.0f));
+        modelShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        //rendering the floor
+        glBindTexture(GL_TEXTURE_2D, skyTexture);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 10.2f, 0.0f));
         model = glm::scale(model, glm::vec3(20.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
