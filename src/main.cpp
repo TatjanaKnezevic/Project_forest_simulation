@@ -375,19 +375,19 @@ int main()
         modelShader.setMat4("view", view);
 
         glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(-1.5f, -3.0f, -0.48f));
+        transform = glm::translate(transform, glm::vec3(-0.3f, 1.5f, 0.65f));
         modelShader.setMat4("model", transform);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glBindTexture(GL_TEXTURE_2D, noteTexture2);
         transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(-0.3f, -3.0f, -2.3f));
+        transform = glm::translate(transform, glm::vec3(-0.3f, 1.5f, -2.3f));
         modelShader.setMat4("model", transform);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glBindTexture(GL_TEXTURE_2D, noteTexture3);
         transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3 (0.5f, -3.0f, -0.6f));
+        transform = glm::translate(transform, glm::vec3 (0.5f, 1.5f, -0.6f));
         modelShader.setMat4("model", transform);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 

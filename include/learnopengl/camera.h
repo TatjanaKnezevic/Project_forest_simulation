@@ -92,7 +92,7 @@ public:
             Position -= Right * velocity + deltaBobbing;
         if (direction == RIGHT)
             Position += Right * velocity + deltaBobbing;
-        //Position.y = 0.0f + previousBobbing.y;
+        Position.y = 0.0f + previousBobbing.y;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
