@@ -124,13 +124,13 @@ int main()
     //wall
     float wallVertices[] = {
             // positions                normals       texture coords
-             6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-            -6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-            -6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+             8.0f, -0.2f,  2.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            -8.0f, -0.2f,  2.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -8.0f, -0.2f, -2.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
 
-             6.0f, -0.2f,  1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-            -6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-             6.0f, -0.2f, -1.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
+             8.0f, -0.2f,  2.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            -8.0f, -0.2f, -2.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+             8.0f, -0.2f, -2.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
     };
     //notes
     float transparentVertices[] = {
@@ -208,7 +208,7 @@ int main()
 
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
     unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
-    unsigned int wallTexture = loadTexture("resources/textures/mountain.jpeg");
+    unsigned int wallTexture = loadTexture("resources/textures/wall.png");
 
 
     // configure global opengl state
@@ -334,7 +334,7 @@ int main()
         //front wall
         glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 15.0f, -60.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 15.0f, -65.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(12.0f));
         modelShader.setMat4("model", model);
@@ -350,7 +350,7 @@ int main()
         //right wall
         glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(60.0f, 15.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(56.0f, 15.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::scale(model, glm::vec3(12.0f));
@@ -359,7 +359,7 @@ int main()
         //left wall
         glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-60.0f, 15.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-70.0f, 15.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::scale(model, glm::vec3(12.0f));
