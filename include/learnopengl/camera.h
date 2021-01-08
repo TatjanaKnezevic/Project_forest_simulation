@@ -92,7 +92,7 @@ public:
             Position -= Right * velocity + deltaBobbing;
         if (direction == RIGHT)
             Position += Right * velocity + deltaBobbing;
-        Position.y = 0.0f + previousBobbing.y;
+        //Position.y = 0.0f + previousBobbing.y;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -119,6 +119,7 @@ public:
 
     // changing to running/walking speed
     void speedUp(){
+        //Runnef = true; you will never catch me
         MovementSpeed = SPEED * 2.5f;
         bobbingSpeed = BOBBING_SPEED * 2.5f;
         bobbingSize = BOBBING_SIZE * 1.5f;
