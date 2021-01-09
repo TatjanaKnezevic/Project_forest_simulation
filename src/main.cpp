@@ -205,7 +205,7 @@ int main()
     unsigned int noteTexture1 = loadTexture("resources/textures/its3.png",true);
     unsigned int noteTexture2 = loadTexture("resources/textures/not3.png",true);
     unsigned int noteTexture3 = loadTexture("resources/textures/real3.png",true);
-
+    
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg",true);
     unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg",true);
     unsigned int wallTexture = loadTexture("resources/textures/wall.jpeg",true);
@@ -275,7 +275,7 @@ int main()
         if(sin_time > 0.0f) {
             dirLight.diffuse = glm::vec3(0.5f * sin_time);
             dirLight.specular = glm::vec3( 0.5f * sin_time);
-            dirLight.direction = glm::vec3(-cos_time, -sin_time, 0);
+            dirLight.direction = glm::vec3(-cos_time, -sin_time, -1+cos_time);
         }
         else {
             dirLight.direction = glm::vec3(0, 0, 0);
@@ -332,7 +332,6 @@ int main()
         glBindVertexArray(wallVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, wallTexture);
-
         //front wall
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 15.0f, -75.0f));
@@ -342,6 +341,8 @@ int main()
         //back wall
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 15.0f, 75.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -356,6 +357,8 @@ int main()
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-75.0f, 15.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, .0f, 1.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, .0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
