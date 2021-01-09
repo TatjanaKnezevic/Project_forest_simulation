@@ -106,6 +106,7 @@ void main()
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
     if(spotLightOn > 0)
         result += CalcSpotLight(spotLight, normal, FragPos, viewDir);
+    //gamma correction
     result = pow(result,vec3(1.0/2.2));
     FragColor = vec4(result, 1.0);
 }

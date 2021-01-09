@@ -313,7 +313,7 @@ int main()
         modelShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
         modelShader.setVec3("viewPosition", camera.Position);
-        modelShader.setFloat("material.shininess", 64.0f);
+        modelShader.setFloat("material.shininess", 8.0f);
         // view/projection transformations
 
         modelShader.setMat4("projection", projection);
