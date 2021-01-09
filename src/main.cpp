@@ -207,8 +207,8 @@ int main()
     unsigned int noteTexture3 = loadTexture("resources/textures/real3.png");
 
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
-    unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
-    unsigned int wallTexture = loadTexture("resources/textures/wall.jpeg");
+    unsigned int skyTexture = loadTexture("resources/textures/sky3.jpg");
+    unsigned int wallTexture = loadTexture("resources/textures/mountain.jpeg");
 
 
     // configure global opengl state
@@ -332,7 +332,6 @@ int main()
         glBindVertexArray(wallVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, wallTexture);
-
         //front wall
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 15.0f, -75.0f));
