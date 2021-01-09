@@ -205,10 +205,10 @@ int main()
     unsigned int noteTexture1 = loadTexture("resources/textures/its3.png",true);
     unsigned int noteTexture2 = loadTexture("resources/textures/not3.png",true);
     unsigned int noteTexture3 = loadTexture("resources/textures/real3.png",true);
-    
+
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg",true);
-    unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg",true);
-    unsigned int wallTexture = loadTexture("resources/textures/wall.jpeg",true);
+    unsigned int skyTexture = loadTexture("resources/textures/cloud.jpeg",true);
+    unsigned int wallTexture = loadTexture("resources/textures/mountain.jpeg",true);
 
 
     // configure global opengl state
