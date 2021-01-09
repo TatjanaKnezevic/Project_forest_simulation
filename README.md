@@ -1,3 +1,5 @@
-# project_base
-Prazan projekat sa pratećim bibliotekama koje koristimo na času. 
+Projekat iz Računarske grafike (predmet treće godine Informatičkog smera Matematičkog Fakultet).
+Tema projekta je horor simulacija u šumi.
+Radili: Aleksandar Šarbajić (mi18145) i Tatjana Knežević (mi18218)
+
 
