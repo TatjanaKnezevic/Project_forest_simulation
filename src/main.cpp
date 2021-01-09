@@ -207,7 +207,7 @@ int main()
     unsigned int noteTexture3 = loadTexture("resources/textures/real3.png");
 
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
-    unsigned int skyTexture = loadTexture("resources/textures/sky3.jpg");
+    unsigned int skyTexture = loadTexture("resources/textures/cloud.jpeg");
     unsigned int wallTexture = loadTexture("resources/textures/mountain.jpeg");
 
 
@@ -275,7 +275,7 @@ int main()
         if(sin_time > 0.0f) {
             dirLight.diffuse = glm::vec3(0.5f * sin_time);
             dirLight.specular = glm::vec3( 0.5f * sin_time);
-            dirLight.direction = glm::vec3(-cos_time, -sin_time, 0);
+            dirLight.direction = glm::vec3(-cos_time, -sin_time, 1-cos_time);
         }
         else {
             dirLight.direction = glm::vec3(0, 0, 0);
