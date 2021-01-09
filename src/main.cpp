@@ -275,7 +275,7 @@ int main()
         if(sin_time > 0.0f) {
             dirLight.diffuse = glm::vec3(0.5f * sin_time);
             dirLight.specular = glm::vec3( 0.5f * sin_time);
-            dirLight.direction = glm::vec3(-cos_time, -sin_time, 1-cos_time);
+            dirLight.direction = glm::vec3(-cos_time, -sin_time, -1+cos_time);
         }
         else {
             dirLight.direction = glm::vec3(0, 0, 0);
