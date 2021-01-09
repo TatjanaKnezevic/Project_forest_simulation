@@ -385,7 +385,7 @@ int main()
         modelShader.setMat4("view", view);
 
         glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(-0.3f, 1.5f, 0.65f));
+        transform = glm::translate(transform, glm::vec3(-2.5f, 1.5f, 2.0f));
         modelShader.setMat4("model", transform);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
