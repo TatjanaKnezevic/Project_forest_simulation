@@ -113,13 +113,13 @@ int main()
     //sky
     float skyVertices[] = {
             // positions                normals       texture coords
-             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
-            -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
+             5.0f, -0.2f,  5.0f,   0.0f, -1.0f, 0.0f,   5.0f, 0.0f,
+            -5.0f, -0.2f,  5.0f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, -1.0f, 0.0f,   0.0f, 5.0f,
 
-             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
-             5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 5.0f
+             5.0f, -0.2f,  5.0f,   0.0f, -1.0f, 0.0f,   5.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, -1.0f, 0.0f,   0.0f, 5.0f,
+             5.0f, -0.2f, -5.0f,   0.0f, -1.0f, 0.0f,   5.0f, 5.0f
     };
     //wall
     float wallVertices[] = {
@@ -143,6 +143,19 @@ int main()
             1.0f, -0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   1.0f,  1.0f,
             1.0f,  0.5f,  0.0f,   0.0f, 1.0f, -1.0f,   1.0f,  0.0f
     };
+
+    int amount = 225;
+    glm::mat4 *treeModelMatrices;
+    treeModelMatrices = new glm::mat4[amount];
+    for(int i = 0; i < amount; ++i){
+        glm::mat4 tmpMat = glm::mat4(1.0f);
+        tmpMat = glm::translate(tmpMat,glm::vec3((glm::mod((float)i,15.0f) * 10.0f - 75.0f + 5.0f + cos(glm::radians(10.0f*i)*i)*2.5f),
+                                                 -3.2f,
+                                                 (glm::floor(i/15.0f)) * 10.0f - 75.0f + 5.0f + sin(glm::radians(10.0f*i)*i)*2.5f));
+        tmpMat = glm::rotate(tmpMat,glm::radians(15.0f*i),glm::vec3(0.0f,1.0f,0.0f));
+        tmpMat = glm::scale(tmpMat,glm::vec3(4.5f));
+        treeModelMatrices[i] = tmpMat;
+    }
 
     // plane VAO
     unsigned int planeVAO, planeVBO;
@@ -217,11 +230,11 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Shader modelShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
-    // load models
-    // -----------
-    Model ourModel(FileSystem::getPath("resources/objects/Tree/Tree.obj"));
-    ourModel.SetShaderTextureNamePrefix("material.");
+    Shader modelShader("resources/shaders/omnishader.vs", "resources/shaders/omnishader.fs");
+
+    // load tree model
+    Model treeModel(FileSystem::getPath("resources/objects/Tree/Tree.obj"));
+    treeModel.SetShaderTextureNamePrefix("material.");
 
     // directional light
     DirLight dirLight;
@@ -261,7 +274,7 @@ int main()
         // ------
         glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 200.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 250.0f);
         glm::mat4 view = camera.GetViewMatrix();
 
 
@@ -300,7 +313,7 @@ int main()
         modelShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
         modelShader.setVec3("viewPosition", camera.Position);
-        modelShader.setFloat("material.shininess", 8.0f);
+        modelShader.setFloat("material.shininess", 64.0f);
         // view/projection transformations
 
         modelShader.setMat4("projection", projection);
@@ -388,13 +401,11 @@ int main()
         modelShader.setMat4("model", transform);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        // rendering the tree
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -3.2f,0.0f));
-        model = glm::scale(model, glm::vec3(4.5f));
-
-        modelShader.setMat4("model", model);
-        ourModel.Draw(modelShader);
+        // rendering the trees
+        for(int i = 0; i < amount; ++i) {
+            modelShader.setMat4("model", treeModelMatrices[i]);
+            treeModel.Draw(modelShader);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
