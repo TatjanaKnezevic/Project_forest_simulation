@@ -55,8 +55,8 @@ uniform vec3 viewPosition;
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);
-    // diffuse shading WITH ALTERATIONS TO TRY AND FIX ISSUES
-    float diff = max(dot(normal, lightDir),max(dot(normal, lightDir), 0.0));
+    // diffuse shading
+    float diff = max(dot(normal, lightDir),0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
@@ -70,8 +70,8 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - fragPos);
-    // diffuse shading WITH ALTERATIONS TO TRY AND FIX ISSUES
-    float diff = max(dot(normal, lightDir), dot(-normal, lightDir));
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
