@@ -341,6 +341,8 @@ int main()
         //back wall
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 15.0f, 75.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -355,6 +357,8 @@ int main()
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-75.0f, 15.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, .0f, 1.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, .0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
