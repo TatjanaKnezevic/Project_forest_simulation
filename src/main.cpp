@@ -124,13 +124,13 @@ int main()
     //wall
     float wallVertices[] = {
             // positions                normals       texture coords
-             8.0f, -0.2f,  2.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-            -8.0f, -0.2f,  2.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-            -8.0f, -0.2f, -2.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+             1.0f,  0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            -1.0f,  0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -1.0f, -0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
 
-             8.0f, -0.2f,  2.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
-            -8.0f, -0.2f, -2.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-             8.0f, -0.2f, -2.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
+             1.0f,  0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+            -1.0f, -0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+             1.0f, -0.25f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f
     };
     //notes
     float transparentVertices[] = {
@@ -185,7 +185,7 @@ int main()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2,GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     // transparent VAO
     unsigned int transparentVAO, transparentVBO;
@@ -208,7 +208,7 @@ int main()
 
     unsigned int floorTexture = loadTexture("resources/textures/floor.jpeg");
     unsigned int skyTexture = loadTexture("resources/textures/sky.jpeg");
-    unsigned int wallTexture = loadTexture("resources/textures/wall.png");
+    unsigned int wallTexture = loadTexture("resources/textures/wall.jpeg");
 
 
     // configure global opengl state
@@ -331,38 +331,32 @@ int main()
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(wallVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
-        //front wall
         glBindTexture(GL_TEXTURE_2D, wallTexture);
+
+        //front wall
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 15.0f, -65.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(12.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 15.0f, -75.0f));
+        model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         //back wall
-        glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 15.0f, 60.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(12.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 15.0f, 75.0f));
+        model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         //right wall
-        glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(56.0f, 15.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(12.0f));
+        model = glm::translate(model, glm::vec3(75.0f, 15.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         //left wall
-        glBindTexture(GL_TEXTURE_2D, wallTexture);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-70.0f, 15.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, glm::vec3(12.0f));
+        model = glm::translate(model, glm::vec3(-75.0f, 15.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 

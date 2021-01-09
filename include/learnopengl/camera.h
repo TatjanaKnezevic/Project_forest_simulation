@@ -16,7 +16,7 @@ enum Camera_Movement {
 };
 
 // Default camera values
-const float YAW             = -90.0f;
+const float YAW             =  -90.0f;
 const float PITCH           =  0.0f;
 const float SPEED           =  5.0f;
 const float SENSITIVITY     =  0.001f;
@@ -80,7 +80,9 @@ public:
 
         // calculating camera bobbing
         float time = glfwGetTime();
-        glm::vec3 bobbing = glm::vec3 (cos(time*bobbingSpeed)*bobbingSize,glm::abs(sin(time*bobbingSpeed)*bobbingSize),0);
+        float cosBobbing = cos(time*bobbingSpeed)*bobbingSize;
+        float sinBobbing = glm::abs(sin(time*bobbingSpeed)*bobbingSize);
+        glm::vec3 bobbing = glm::vec3 (cosBobbing*sin(glm::radians(Yaw)),sinBobbing,(1-cosBobbing)*cos(glm::radians(Yaw)));
         glm::vec3 deltaBobbing = previousBobbing - bobbing;
         previousBobbing = bobbing;
 
@@ -119,10 +121,9 @@ public:
 
     // changing to running/walking speed
     void speedUp(){
-        //Runnef = true; you will never catch me
         MovementSpeed = SPEED * 2.5f;
         bobbingSpeed = BOBBING_SPEED * 2.5f;
-        bobbingSize = BOBBING_SIZE * 1.5f;
+        bobbingSize = BOBBING_SIZE * 1.3f;
     }
     void slowDown(){
         MovementSpeed = SPEED;
