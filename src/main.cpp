@@ -380,24 +380,28 @@ int main()
         glBindVertexArray(transparentVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, noteTexture1);
-        modelShader.setMat4("projection", projection);
-        modelShader.setMat4("view", view);
 
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(-2.5f, 1.5f, 2.0f));
-        modelShader.setMat4("model", transform);
+        model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        model = glm::translate(model, glm::vec3(glm::vec3((glm::mod((float)14,10.0f) * 15.0f - 75.0f + 7.5f + cos(glm::radians(10.0f*14)*14)*3.75f),
+                                                          0.0f,
+                                                          (glm::floor(14/10.0f)) * 15.0f - 75.0f + 7.5f + sin(glm::radians(10.0f*14)*14)*3.75f)) + glm::vec3(-0.07f, 1.0f, 0.65f));
+        modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glBindTexture(GL_TEXTURE_2D, noteTexture2);
-        transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(-0.3f, 1.5f, -2.3f));
-        modelShader.setMat4("model", transform);
+        model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        model = glm::translate(model, glm::vec3((glm::mod((float)72,10.0f) * 15.0f - 75.0f + 7.5f + cos(glm::radians(10.0f*72)*72)*3.75f),
+                                                0.0f,
+                                                (glm::floor(72/10.0f)) * 15.0f - 75.0f + 7.5f + sin(glm::radians(10.0f*72)*72)*3.75f)+ glm::vec3(0.03f, 1.0f, 0.65f));
+        modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glBindTexture(GL_TEXTURE_2D, noteTexture3);
-        transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3 (0.5f, 1.5f, -0.6f));
-        modelShader.setMat4("model", transform);
+        model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        model = glm::translate(model, glm::vec3((glm::mod((float)87,10.0f) * 15.0f - 75.0f + 7.5f + cos(glm::radians(10.0f*87)*87)*3.75f),
+                                                0.0f,
+                                                (glm::floor(87/10.0f)) * 15.0f - 75.0f + 7.5f + sin(glm::radians(10.0f*87)*87)*3.75f) + glm::vec3 (-0.05f, 1.0f, 0.65f));
+        modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // rendering the trees
