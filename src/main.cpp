@@ -113,45 +113,45 @@ int main()
     //sky
     float skyVertices[] = {
             // positions                normals       texture coords
-             5.0f, -0.2f,  5.0f,   0.0f, -1.0f, 0.0f,   5.0f, 0.0f,
-            -5.0f, -0.2f,  5.0f,   0.0f, -1.0f, 0.0f,   0.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,   0.0f, -1.0f, 0.0f,   0.0f, 5.0f,
-
-             5.0f, -0.2f,  5.0f,   0.0f, -1.0f, 0.0f,   5.0f, 0.0f,
-            -5.0f, -0.2f, -5.0f,   0.0f, -1.0f, 0.0f,   0.0f, 5.0f,
-             5.0f, -0.2f, -5.0f,   0.0f, -1.0f, 0.0f,   5.0f, 5.0f
+             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
+            -5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
+            
+             5.0f, -0.2f,  5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 0.0f,
+            -5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   0.0f, 5.0f,
+             5.0f, -0.2f, -5.0f,   0.0f, 1.0f, 0.0f,   5.0f, 5.0f
     };
     //wall
     float wallVertices[] = {
             // positions                normals       texture coords
-             1.0f,  0.25f, 0.0f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f,
-            -1.0f,  0.25f, 0.0f,   0.0f, 0.0f, -1.0f,   0.0f, 0.0f,
-            -1.0f, -0.25f, 0.0f,   0.0f, 0.0f, -1.0f,   0.0f, 1.0f,
+             1.0f,  0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+            -1.0f,  0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+            -1.0f, -0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,
 
-             1.0f,  0.25f, 0.0f,   0.0f, 0.0f, -1.0f,   1.0f, 0.0f,
-            -1.0f, -0.25f, 0.0f,   0.0f, 0.0f, -1.0f,   0.0f, 1.0f,
-             1.0f, -0.25f, 0.0f,   0.0f, 0.0f, -1.0f,   1.0f, 1.0f
+             1.0f,  0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+            -1.0f, -0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,
+             1.0f, -0.25f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f
     };
     //notes
     float transparentVertices[] = {
             // positions               normals        texture Coords (swapped y coordinates because texture is flipped upside down)
-            0.0f,  0.5f,  0.0f,   0.0f, 0.0f, -1.0f,   0.0f,  0.0f,
-            0.0f, -0.5f,  0.0f,   0.0f, 0.0f, -1.0f,   0.0f,  1.0f,
-            1.0f, -0.5f,  0.0f,   0.0f, 0.0f, -1.0f,   1.0f,  1.0f,
+            -0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f,  0.0f,
+            -0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f,  1.0f,
+             0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f,  1.0f,
 
-            0.0f,  0.5f,  0.0f,   0.0f, 0.0f, -1.0f,   0.0f,  0.0f,
-            1.0f, -0.5f,  0.0f,   0.0f, 0.0f, -1.0f,   1.0f,  1.0f,
-            1.0f,  0.5f,  0.0f,   0.0f, 0.0f, -1.0f,   1.0f,  0.0f
+            -0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f,  0.0f,
+             0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f,  1.0f,
+             0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f,  0.0f
     };
 
-    int amount = 225;
+    int amount = 100;
     glm::mat4 *treeModelMatrices;
     treeModelMatrices = new glm::mat4[amount];
     for(int i = 0; i < amount; ++i){
         glm::mat4 tmpMat = glm::mat4(1.0f);
-        tmpMat = glm::translate(tmpMat,glm::vec3((glm::mod((float)i,15.0f) * 10.0f - 75.0f + 5.0f + cos(glm::radians(10.0f*i)*i)*2.5f),
+        tmpMat = glm::translate(tmpMat,glm::vec3((glm::mod((float)i,10.0f) * 15.0f - 75.0f + 7.5f + cos(glm::radians(10.0f*i)*i)*3.75f),
                                                  -3.2f,
-                                                 (glm::floor(i/15.0f)) * 10.0f - 75.0f + 5.0f + sin(glm::radians(10.0f*i)*i)*2.5f));
+                                                 (glm::floor(i/10.0f)) * 15.0f - 75.0f + 7.5f + sin(glm::radians(10.0f*i)*i)*3.75f));
         tmpMat = glm::rotate(tmpMat,glm::radians(15.0f*i),glm::vec3(0.0f,1.0f,0.0f));
         tmpMat = glm::scale(tmpMat,glm::vec3(4.5f));
         treeModelMatrices[i] = tmpMat;
@@ -253,7 +253,6 @@ int main()
     spotLight.cutOff = glm::cos(glm::radians(12.5f));
     spotLight.outerCutOff = glm::cos(glm::radians(15.0f));
 
-    glm::vec4 clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     // render loop
     // -----------
 
@@ -272,7 +271,6 @@ int main()
 
         // render
         // ------
-        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 250.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -354,15 +352,16 @@ int main()
         //back wall
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 15.0f, 75.0f));
-        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f,1.0f,0.0f));
+        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, 0.0f, 1.0f));
+        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         //right wall
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(75.0f, 15.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(-90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -370,8 +369,8 @@ int main()
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-75.0f, 15.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, .0f, 1.0f));
-        model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, .0f, 0.0f));
+        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, .0f, 1.0f));
+        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, .0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
