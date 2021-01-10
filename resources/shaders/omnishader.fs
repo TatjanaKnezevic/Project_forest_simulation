@@ -73,9 +73,9 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - fragPos);
     // diffuse shading
-    float diff = max(dot(normal, lightDir),0);
+    //float diff = max(dot(normal, lightDir),0);
     // diffuse shading WITH CHANGES TO TRY FIX ISSUES
-    //float diff = max(dot(normal, lightDir),max(dot(-normal,lightDir),0));
+    float diff = max(dot(normal, lightDir),max(dot(-normal,lightDir),0));
     // specular shading
     vec3 halfwayDir = normalize(viewDir + lightDir);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
