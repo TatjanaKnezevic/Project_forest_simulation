@@ -1,17 +1,6 @@
 #version 330 core
 out vec4 FragColor;
 
-struct PointLight {
-    vec3 position;
-
-    vec3 specular;
-    vec3 diffuse;
-    vec3 ambient;
-
-    float constant;
-    float linear;
-    float quadratic;
-};
 struct DirLight {
     vec3 direction;
 

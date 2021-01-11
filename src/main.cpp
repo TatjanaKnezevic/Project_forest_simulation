@@ -19,7 +19,9 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void processInput(GLFWwindow *window);
+unsigned int loadTexture(const char *path, bool gamma);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -60,7 +62,6 @@ struct SpotLight {
     glm::vec3 specular;
 };
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 int main()
 {
     // glfw: initialize and configure
@@ -69,15 +70,10 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    unsigned int loadTexture(const char *path, bool gamma);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Forest Simulation", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -144,6 +140,7 @@ int main()
              0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f,  0.0f
     };
 
+    // calculating tree positions
     int amount = 100;
     glm::mat4 *treeModelMatrices;
     treeModelMatrices = new glm::mat4[amount];
@@ -233,7 +230,7 @@ int main()
     Shader modelShader("resources/shaders/omnishader.vs", "resources/shaders/omnishader.fs");
 
     // load tree model
-    Model treeModel(FileSystem::getPath("resources/objects/Tree/Tree.obj"));
+    Model treeModel("resources/objects/Tree/Tree.obj", true);
     treeModel.SetShaderTextureNamePrefix("material.");
 
     // directional light
@@ -276,11 +273,11 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
 
 
-        // don't forget to enable shader before setting uniforms
+        // enabling shader before setting uniforms
         modelShader.use();
 
         // calculating day-night cycle
-        float time = glfwGetTime();
+        float time = currentFrame;
         float sin_time = sin(time/10);
         float cos_time = cos(time/10);
         if(sin_time > 0.0f) {
@@ -328,7 +325,6 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //rendering the sky
-        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(skyVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, skyTexture);
@@ -339,7 +335,6 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         //rendering the walls
-        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(wallVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, wallTexture);
@@ -353,8 +348,6 @@ int main()
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 15.0f, 75.0f));
         model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f,1.0f,0.0f));
-        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, 0.0f, 1.0f));
-        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -369,14 +362,11 @@ int main()
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-75.0f, 15.0f, 0.0f));
         model = glm::rotate(model, glm::radians(90.0f),glm::vec3(0.0f, 1.0f, 0.0f));
-        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(0.0f, .0f, 1.0f));
-        //model = glm::rotate(model, glm::radians(180.0f),glm::vec3(1.0f, .0f, 0.0f));
         model = glm::scale(model, glm::vec3(75.0f));
         modelShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // rendering notes
-        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(transparentVAO);
         glUniform1i(glGetUniformLocation(modelShader.ID, "material.texture_diffuse1"), 0);
         glBindTexture(GL_TEXTURE_2D, noteTexture1);
@@ -421,6 +411,12 @@ int main()
     // ------------------------------------------------------------------
     glDeleteVertexArrays(1, &planeVAO);
     glDeleteBuffers(1, &planeVBO);
+    glDeleteVertexArrays(1, &skyVAO);
+    glDeleteBuffers(1, &skyVBO);
+    glDeleteVertexArrays(1, &wallVAO);
+    glDeleteBuffers(1, &wallVBO);
+    glDeleteVertexArrays(1, &transparentVAO);
+    glDeleteBuffers(1, &transparentVBO);
     glfwTerminate();
     return 0;
 }
@@ -475,9 +471,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     // changing to running/walking
-    if(glfwGetKey(window,GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    if(key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
         camera.speedUp();
-    if(glfwGetKey(window,GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+    if(key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE)
         camera.slowDown();
     // flashlight control
     if(key == GLFW_KEY_F && action == GLFW_PRESS){
