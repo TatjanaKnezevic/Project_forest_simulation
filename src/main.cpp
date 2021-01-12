@@ -81,7 +81,7 @@ int main()
     // -----------------------------
     monitor = glfwGetPrimaryMonitor();
     mode = glfwGetVideoMode(monitor);
-    
+
     // glfw window creation
     // --------------------
     window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Forest Simulation", NULL, NULL);
@@ -319,7 +319,7 @@ int main()
         modelShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
         modelShader.setVec3("viewPosition", camera.Position);
-        modelShader.setFloat("material.shininess", 2.0f);
+        modelShader.setFloat("material.shininess", 32.0f);
         // view/projection transformations
 
         modelShader.setMat4("projection", projection);
