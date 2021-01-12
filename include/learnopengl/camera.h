@@ -92,6 +92,15 @@ public:
             Position -= Right * velocity + deltaBobbing;
         if (direction == RIGHT)
             Position += Right * velocity + deltaBobbing;
+        // camera position boundaries
+        if(Position.x > 74.0f)
+            Position.x = 74.0f;
+        if(Position.x < -74.0f)
+            Position.x = -74.0f;
+        if(Position.z > 74.0f)
+            Position.z = 74.0f;
+        if(Position.z < -74.0f)
+            Position.z = -74.0f;
         Position.y = 0.0f + previousBobbing.y;
     }
 
