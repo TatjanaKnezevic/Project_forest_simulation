@@ -62,6 +62,12 @@ struct SpotLight {
     glm::vec3 specular;
 };
 
+// Code so we can swap to and from fullscreen
+GLFWmonitor *monitor;
+const GLFWvidmode *mode;
+GLFWwindow* window;
+bool isFullScreen = false;
+
 int main()
 {
     // glfw: initialize and configure
@@ -71,9 +77,14 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    // getting the monitor and mode so we can use it to enter fullscreen mode
+    // -----------------------------
+    monitor = glfwGetPrimaryMonitor();
+    mode = glfwGetVideoMode(monitor);
+    
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Forest Simulation", NULL, NULL);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Forest Simulation", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -478,6 +489,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     // flashlight control
     if(key == GLFW_KEY_F && action == GLFW_PRESS){
         flashlightOn = !flashlightOn;
+    }
+    // fullscreen control
+    if(key == GLFW_KEY_F11 && action == GLFW_PRESS){
+        if(!isFullScreen) {
+            glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            isFullScreen = true;
+        }
+        else{
+            glfwSetWindowMonitor(window, nullptr, 0, 0, SCR_WIDTH, SCR_HEIGHT, mode->refreshRate);
+            isFullScreen = false;
+        }
     }
 }
 
